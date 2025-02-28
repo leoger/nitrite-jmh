@@ -3,7 +3,9 @@
 
 name: JMH Run
 
-on: [push]
+on:
+  - push
+  - workflow_dispatch  # enables manually triggered runs
 
 jobs:
   build:
