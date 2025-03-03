@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode({
         Mode.AverageTime,
 })
-@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@OutputTimeUnit(TimeUnit.MICROSECONDS)
 public class NitriteBenchmark {
 
     @Benchmark
@@ -23,8 +23,8 @@ public class NitriteBenchmark {
     @Warmup(iterations = BenchmarkParam.WARMUPS, time = BenchmarkParam.MILLISECONDS, timeUnit = TimeUnit.MILLISECONDS)
     @Measurement(iterations = BenchmarkParam.ITERATIONS, time = BenchmarkParam.MILLISECONDS, timeUnit = TimeUnit.MILLISECONDS)
     public void queryWithJacksonMapper(ExecutionPlan plan, Blackhole blackhole) throws Exception {
-        var indexValue = BenchmarkParam.RANDOM.nextInt();
-        var value = BenchmarkParam.RANDOM.nextDouble();
+        var indexValue = BenchmarkParam.RANDOM.nextInt(plan.getDataSetSize()/10);
+        var value = BenchmarkParam.RANDOM.nextInt(4)/4.0;
         Collection<ArbitraryData> results = query(plan, indexValue, value);
         blackhole.consume(results);
     }
@@ -36,10 +36,22 @@ public class NitriteBenchmark {
     @Warmup(iterations = BenchmarkParam.WARMUPS, time = BenchmarkParam.MILLISECONDS, timeUnit = TimeUnit.MILLISECONDS)
     @Measurement(iterations = BenchmarkParam.ITERATIONS, time = BenchmarkParam.MILLISECONDS, timeUnit = TimeUnit.MILLISECONDS)
     public void queryWithMappable(EntityConverterExecutionPlan plan, Blackhole blackhole) throws Exception {
-        var indexValue = BenchmarkParam.RANDOM.nextInt();
-        var value = BenchmarkParam.RANDOM.nextDouble();
+        var indexValue = BenchmarkParam.RANDOM.nextInt(plan.getDataSetSize()/2);
+        var value = BenchmarkParam.RANDOM.nextInt(4)/4.0;
         Collection<ArbitraryData> results = query(plan, indexValue, value);
         blackhole.consume(results);
+    }
+
+    @Benchmark
+    @Fork(value = BenchmarkParam.FORKS, jvmArgsAppend = {
+            "-Xmx8192m",
+            "-Xmn6144m"})
+    @Warmup(iterations = BenchmarkParam.WARMUPS, time = BenchmarkParam.MILLISECONDS, timeUnit = TimeUnit.MILLISECONDS)
+    @Measurement(iterations = BenchmarkParam.ITERATIONS, time = BenchmarkParam.MILLISECONDS, timeUnit = TimeUnit.MILLISECONDS)
+    public void noopBaseline(Blackhole blackhole) throws Exception {
+        var indexValue = BenchmarkParam.RANDOM.nextInt();
+        var value = BenchmarkParam.RANDOM.nextInt(4)/4.0;
+        blackhole.consume(indexValue + value);
     }
 
     private <T> Collection<T> query(BaseExecutionPlan<T> plan, int indexValue, double value) throws SQLException {

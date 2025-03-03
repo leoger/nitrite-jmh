@@ -56,7 +56,7 @@ public class EntityConverterExecutionPlan extends BaseExecutionPlan<ArbitraryDat
     protected ArbitraryData[] randomData() {
         sequence = new AtomicInteger(0);
         return IntStream.range(0, dataSetSize)
-                .mapToObj(index -> randomDatum())
+                .mapToObj(index -> randomDatum(dataSetSize))
                 .toArray(ArbitraryData[]::new);
     }
 
@@ -109,14 +109,14 @@ public class EntityConverterExecutionPlan extends BaseExecutionPlan<ArbitraryDat
         return data;
     }
 
-    private ArbitraryData randomDatum() {
+    private ArbitraryData randomDatum(int dataSetSize) {
         return new ArbitraryData()
                 .id(sequence.incrementAndGet())
                 .flag1(BenchmarkParam.RANDOM.nextBoolean())
                 .flag2(BenchmarkParam.RANDOM.nextBoolean())
-                .number1(BenchmarkParam.RANDOM.nextDouble())
+                .number1(BenchmarkParam.RANDOM.nextInt(4)/4.0) // can be 0.0, 0.25, 0.5, 0.75
                 .number2(BenchmarkParam.RANDOM.nextDouble())
-                .index1(BenchmarkParam.RANDOM.nextInt())
+                .index1(BenchmarkParam.RANDOM.nextInt(dataSetSize/10))
                 .text(BenchmarkParam.GENERATOR.generate(100));
     }
 }
