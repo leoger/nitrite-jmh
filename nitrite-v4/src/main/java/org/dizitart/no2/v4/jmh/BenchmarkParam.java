@@ -1,5 +1,6 @@
 package org.dizitart.no2.v4.jmh;
 
+import org.apache.commons.math3.random.RandomDataGenerator;
 import org.apache.commons.text.RandomStringGenerator;
 
 import java.security.NoSuchAlgorithmException;
@@ -20,9 +21,7 @@ public class BenchmarkParam {
 
     public final static int MILLISECONDS = 1500;
 
-    public final static Random RANDOM;
-
-    public final static RandomStringGenerator GENERATOR;
+    public final static RandomDataGenerator RANDOM;
 
     public final static String CREATE_TABLE_STATEMENT =
             "CREATE TABLE IF NOT EXISTS arbitrary ("
@@ -44,11 +43,6 @@ public class BenchmarkParam {
             "SELECT * FROM arbitrary WHERE index1=? and number1=?";
 
     static {
-        try {
-            RANDOM = SecureRandom.getInstance("NativePRNGNonBlocking");
-            GENERATOR = new RandomStringGenerator.Builder().usingRandom(RANDOM::nextInt).build();
-        } catch (SecurityException | NoSuchAlgorithmException x) {
-            throw new RuntimeException(x);
-        }
+            RANDOM = new RandomDataGenerator();
     }
 }

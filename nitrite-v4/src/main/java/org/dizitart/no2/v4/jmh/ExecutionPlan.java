@@ -107,11 +107,11 @@ public class ExecutionPlan extends BaseExecutionPlan<ArbitraryData> {
     private ArbitraryData randomDatum(int dataSetSize) {
         return new ArbitraryData()
                 .id(sequence.incrementAndGet())
-                .flag1(BenchmarkParam.RANDOM.nextBoolean())
-                .flag2(BenchmarkParam.RANDOM.nextBoolean())
-                .number1(BenchmarkParam.RANDOM.nextInt(4)/4.0)
-                .number2(BenchmarkParam.RANDOM.nextDouble())
-                .index1(BenchmarkParam.RANDOM.nextInt(dataSetSize/10))
-                .text(BenchmarkParam.GENERATOR.generate(100));
+                .flag1(BenchmarkParam.RANDOM.nextInt(0,1) == 1)
+                .flag2(BenchmarkParam.RANDOM.nextInt(0, 1) == 1)
+                .number1(BenchmarkParam.RANDOM.nextInt(0,3)/4.0) // can be 0.0, 0.25, 0.5, 0.75
+                .number2(BenchmarkParam.RANDOM.nextUniform(0.0, 1.0   ))
+                .index1(BenchmarkParam.RANDOM.nextInt(0,dataSetSize/10))
+                .text(BenchmarkParam.RANDOM.nextHexString(100));
     }
 }
