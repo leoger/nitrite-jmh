@@ -21,11 +21,14 @@ jobs:
           architecture: x64
           cache: 'maven'
 
-      - name: Grant Execute Permission for Script
-        run: chmod +x benchmark.sh
+      - name: Build with Maven
+        run: mvn -pl '!nitrite-java/nitrite-native-tests,!nitrite-java/potassium-nitrite' clean install -DskipTests
 
-      - name: Run the Benchmark
-        run: ./benchmark.sh
+      - name: Prepare the output dir
+        run: mkdir reports
+
+      - name: Run the Benchmark with stack profiler
+        run: java -jar nitrite-v4/target/benchmarks.jar -rf json -rff reports/nitrite-v4-subset.json -prof stack
 
       - name: Upload JMH Results
         uses: actions/upload-artifact@v4

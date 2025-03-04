@@ -6,7 +6,6 @@ import lombok.val;
 import org.dizitart.no2.Nitrite;
 import org.dizitart.no2.common.mapper.SimpleNitriteMapper;
 import org.dizitart.no2.common.module.NitriteModule;
-import org.dizitart.no2.exceptions.NitriteIOException;
 import org.dizitart.no2.index.IndexOptions;
 import org.dizitart.no2.index.IndexType;
 import org.dizitart.no2.repository.ObjectRepository;
@@ -22,7 +21,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 import static org.dizitart.no2.filters.FluentFilter.where;
-
 
 /**
  * @author Anindya Chatterjee

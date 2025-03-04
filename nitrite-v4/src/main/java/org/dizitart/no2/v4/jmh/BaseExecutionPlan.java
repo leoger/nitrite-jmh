@@ -33,17 +33,17 @@ public abstract class BaseExecutionPlan<T> {
     protected PreparedStatement sqliteQuery = null;
 
     @Param({
- //           "SQLITE_FILE",
+            "SQLITE_FILE",
             "SQLITE_MEMORY",
- //           "NITRITE_MVSTORE_FILE",
+            "NITRITE_MVSTORE_FILE",
  //           "NITRITE_ROCKSDB_FILE",
             "NITRITE_MVSTORE_MEMORY",
     })
     protected Database database;
 
     @Param({
-            "10000",
-    //        "50000",
+//            "10000",
+            "50000",
     //        "100000",
     })
     protected int dataSetSize;

@@ -11,6 +11,7 @@
     <modules>
 <!--        <module>nitrite-v3</module>-->
         <module>nitrite-v4</module>
+        <module>nitrite-java</module>
     </modules>
 
     <repositories>
