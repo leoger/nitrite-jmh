@@ -60,6 +60,7 @@ public class NitriteBenchmark {
             case NITRITE_MVSTORE_FILE:
             case NITRITE_ROCKSDB_FILE:
             case NITRITE_MVSTORE_MEMORY:
+            case NITRITE_NATIVE_MEMORY:
                 results = plan.inquireNitrite(indexValue, value);
                 break;
             case SQLITE_FILE:

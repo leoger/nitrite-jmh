@@ -38,6 +38,7 @@ public abstract class BaseExecutionPlan<T> {
             "NITRITE_MVSTORE_FILE",
  //           "NITRITE_ROCKSDB_FILE",
             "NITRITE_MVSTORE_MEMORY",
+            "NITRITE_NATIVE_MEMORY",
     })
     protected Database database;
 
@@ -68,6 +69,7 @@ public abstract class BaseExecutionPlan<T> {
             case NITRITE_MVSTORE_FILE:
             case NITRITE_ROCKSDB_FILE:
             case NITRITE_MVSTORE_MEMORY:
+            case NITRITE_NATIVE_MEMORY:
                 setupNitrite(database);
                 insertDataIntoNitrite(data);
                 break;
@@ -84,6 +86,7 @@ public abstract class BaseExecutionPlan<T> {
             case NITRITE_MVSTORE_FILE:
             case NITRITE_ROCKSDB_FILE:
             case NITRITE_MVSTORE_MEMORY:
+            case NITRITE_NATIVE_MEMORY:
                 tearDownNitrite(database);
                 break;
         }
@@ -94,6 +97,8 @@ public abstract class BaseExecutionPlan<T> {
         switch (db) {
             case NITRITE_MVSTORE_MEMORY:
                 storeModule = MVStoreModule.withConfig().build();
+                break;
+            case NITRITE_NATIVE_MEMORY:
                 break;
             case NITRITE_MVSTORE_FILE:
                 assert db.path != null;
@@ -106,7 +111,7 @@ public abstract class BaseExecutionPlan<T> {
                 storeModule = RocksDBModule.withConfig().filePath(db.path).build();
                 break;
             default:
-                break;
+                throw new IllegalStateException("We added an enum value but forgot to update the switch.");
         }
         return storeModule;
     }
@@ -146,6 +151,7 @@ public abstract class BaseExecutionPlan<T> {
     @Accessors(fluent = true)
     @RequiredArgsConstructor
     public enum Database {
+        NITRITE_NATIVE_MEMORY(null),
         NITRITE_MVSTORE_MEMORY(null),
         NITRITE_MVSTORE_FILE(String.format("%s/nitrite-mvstore-v4.db", BenchmarkParam.TMP)),
         NITRITE_ROCKSDB_FILE(String.format("%s/nitrite-rocksdb-v4.db", BenchmarkParam.TMP)),

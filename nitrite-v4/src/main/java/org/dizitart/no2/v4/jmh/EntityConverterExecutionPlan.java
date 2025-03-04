@@ -38,16 +38,15 @@ public class EntityConverterExecutionPlan extends BaseExecutionPlan<ArbitraryDat
         SimpleNitriteMapper nitriteMapper = new SimpleNitriteMapper();
         nitriteMapper.registerEntityConverter(new ArbitraryData.Converter());
 
+        var builderInProgress = Nitrite.builder();
         if (storeModule != null) {
-            nitrite = Nitrite.builder()
-                    .loadModule(storeModule)
-                    .loadModule(NitriteModule.module(nitriteMapper))
-                    .openOrCreate();
-            repository = nitrite.getRepository(ArbitraryData.class);
-            repository.createIndex(IndexOptions.indexOptions(IndexType.NON_UNIQUE), "index1");
-        } else {
-            throw new NitriteIOException("failed to setup nitrite database");
+            builderInProgress = builderInProgress.loadModule(storeModule);
         }
+        nitrite = builderInProgress
+                .loadModule(NitriteModule.module(nitriteMapper))
+                .openOrCreate();
+        repository = nitrite.getRepository(ArbitraryData.class);
+        repository.createIndex(IndexOptions.indexOptions(IndexType.NON_UNIQUE), "index1");
     }
 
     @Override

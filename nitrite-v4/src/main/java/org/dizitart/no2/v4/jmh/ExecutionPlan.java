@@ -33,18 +33,17 @@ public class ExecutionPlan extends BaseExecutionPlan<ArbitraryData> {
 
     @Override
     protected void setupNitrite(Database db) throws IOException {
-        StoreModule storeModule = getStoreModule(db);
 
+        var builderInProgress = Nitrite.builder();
+        StoreModule storeModule = getStoreModule(db);
         if (storeModule != null) {
-            nitrite = Nitrite.builder()
-                    .loadModule(storeModule)
-                    .loadModule(new JacksonMapperModule())
-                    .openOrCreate();
-            repository = nitrite.getRepository(ArbitraryData.class);
-            repository.createIndex(IndexOptions.indexOptions(IndexType.NON_UNIQUE), "index1");
-        } else {
-            throw new NitriteIOException("failed to setup nitrite database");
+            builderInProgress = builderInProgress.loadModule(storeModule);
         }
+        nitrite = builderInProgress
+                .loadModule(new JacksonMapperModule())
+                .openOrCreate();
+        repository = nitrite.getRepository(ArbitraryData.class);
+        repository.createIndex(IndexOptions.indexOptions(IndexType.NON_UNIQUE), "index1");
     }
 
     @Override
